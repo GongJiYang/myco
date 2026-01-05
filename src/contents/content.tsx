@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import "./style.css"
+
+import "./style.css";
 
 function TextSelectionListener() {
-  const [selection, setSelection] = useState("");
+  // 存储选中文本
+  const [selection, setSelection] = useState<string>("");
+  // 控制按钮显示隐藏
   const [showButton, setShowButton] = useState(false);
+  // 按钮坐标位置
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
-
+// 事件监听
   useEffect(() => {
     const handleSelection = () => {
       const selectedText = window.getSelection()?.toString() || "";
@@ -35,7 +39,7 @@ function TextSelectionListener() {
       document.removeEventListener("keyup", handleSelection);
     };
   }, []);
-
+// 按钮点击处理
   const handleGenerateQuestion = () => {
     // Send message to background script to generate question
     chrome.runtime.sendMessage({
@@ -44,7 +48,7 @@ function TextSelectionListener() {
     });
     setShowButton(false);
   };
-
+// UI渲染
   if (!showButton) return null;
 
   return (
@@ -60,19 +64,7 @@ function TextSelectionListener() {
     >
       <button
         onClick={handleGenerateQuestion}
-        style={{
-          backgroundColor: "#3b82f6",
-          color: "white",
-          padding: "8px 16px",
-          borderRadius: "8px",
-          border: "none",
-          cursor: "pointer",
-          fontSize: "14px",
-          fontWeight: "500",
-          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#2563eb"}
-        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#3b82f6"}
+        className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 transition-colors"
       >
         Generate Question
       </button>

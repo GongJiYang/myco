@@ -25,7 +25,6 @@ export async function extractArticleContent(
   // Try to find main content
   const contentSelectors = [
     "article",
-    '[role="main"]",
     "main",
     ".content",
     "#content",
@@ -54,7 +53,7 @@ export async function extractArticleContent(
     undefined;
 
   const publishedDate =
-    doc.querySelector('time')?.getAttribute("datetime") ||
+    doc.querySelector("time")?.getAttribute("datetime") ||
     doc.querySelector('[rel="published"]')?.getAttribute("content") ||
     undefined;
 
