@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 
 interface Settings {
-  apiKey: string;
+  anthropicApiKey: string;
+  glmApiKey: string;
+  aiProvider: "anthropic" | "glm";
   dailyGoal: number;
   defaultDifficulty: "easy" | "medium" | "hard";
   reviewAlgorithm: "FSRS" | "SM2";
@@ -10,7 +12,9 @@ interface Settings {
 
 function SettingsPage() {
   const [settings, setSettings] = useState<Settings>({
-    apiKey: "",
+    anthropicApiKey: "",
+    glmApiKey: "",
+    aiProvider: "glm",
     dailyGoal: 10,
     defaultDifficulty: "medium",
     reviewAlgorithm: "FSRS",
@@ -49,15 +53,43 @@ function SettingsPage() {
 
       <div className="settings-section">
         <h2>API Configuration</h2>
+
         <div className="setting-item">
-          <label>Claude API Key</label>
-          <input
-            type="password"
-            value={settings.apiKey}
-            onChange={(e) => handleSettingChange("apiKey", e.target.value)}
-            placeholder="sk-ant-..."
-          />
+          <label>AI Provider</label>
+          <select
+            value={settings.aiProvider}
+            onChange={(e) => handleSettingChange("aiProvider", e.target.value)}
+          >
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="glm">Zhipu AI (GLM)</option>
+          </select>
         </div>
+
+        {settings.aiProvider === "anthropic" && (
+          <div className="setting-item">
+            <label>Anthropic API Key</label>
+            <input
+              type="password"
+              value={settings.anthropicApiKey}
+              onChange={(e) => handleSettingChange("anthropicApiKey", e.target.value)}
+              placeholder="sk-ant-..."
+            />
+            <small>Requires a valid Claude API key from Anthropic</small>
+          </div>
+        )}
+
+        {settings.aiProvider === "glm" && (
+          <div className="setting-item">
+            <label>GLM API Key</label>
+            <input
+              type="password"
+              value={settings.glmApiKey}
+              onChange={(e) => handleSettingChange("glmApiKey", e.target.value)}
+              placeholder="Enter your GLM API key"
+            />
+            <small>Requires a valid API key from Zhipu AI</small>
+          </div>
+        )}
       </div>
 
       <div className="settings-section">

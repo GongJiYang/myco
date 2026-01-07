@@ -148,4 +148,62 @@ class StorageManager {
   }
 }
 
-export default new StorageManager();
+// Singleton instance
+const storageManager = new StorageManager();
+export default storageManager;
+
+/**
+ * Save a question with automatic metadata generation
+ * Wraps addQuestion with ID generation and default values
+ */
+export async function saveQuestion(
+  partialQuestion: Partial<Question> & { question: string; answer: string }
+): Promise<Question> {
+  const now = new Date().toISOString();
+  const id = partialQuestion.id || `q_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+
+  const question: Question = {
+    id,
+    question: partialQuestion.question,
+    answer: partialQuestion.answer,
+    difficulty: partialQuestion.difficulty || "medium",
+    createdAt: partialQuestion.createdAt || now,
+    nextReview: partialQuestion.nextReview || now, // Due immediately by default
+    interval: partialQuestion.interval || 1,
+    easeFactor: partialQuestion.easeFactor || 2.5,
+    sourceText: partialQuestion.sourceText,
+  };
+
+  await storageManager.addQuestion(question);
+  return question;
+}
+
+/**
+ * Get questions that are due for review
+ * @param limit - Maximum number of questions to return
+ */
+export async function getDueReviews(limit?: number): Promise<Question[]> {
+  const questions = await storageManager.getDueQuestions();
+  return limit ? questions.slice(0, limit) : questions;
+}
+
+/**
+ * Update an existing question
+ */
+export async function updateQuestion(question: Question): Promise<void> {
+  await storageManager.updateQuestion(question);
+}
+
+/**
+ * Add a review log
+ */
+export async function addReviewLog(log: ReviewLog): Promise<void> {
+  await storageManager.addReviewLog(log);
+}
+
+/**
+ * Get review logs for a question
+ */
+export async function getReviewLogs(questionId: string): Promise<ReviewLog[]> {
+  return await storageManager.getReviewLogs(questionId);
+}

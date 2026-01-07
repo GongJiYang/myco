@@ -4,6 +4,7 @@
  */
 
 import type { PlasmoMessaging } from "@plasmohq/messaging";
+import type { Question } from "~utils/storage";
 
 import { generateQuestion } from "~utils/api";
 import { saveQuestion } from "~utils/storage";
@@ -19,7 +20,7 @@ export type ResponseBody = {
   error?: string;
 };
 
-const handler: PlasmoMessageHandler<RequestBody, ResponseBody> = async (
+const handler: PlasmoMessaging.MessageHandler<RequestBody, ResponseBody> = async (
   req,
   res
 ) => {
@@ -54,3 +55,20 @@ const handler: PlasmoMessageHandler<RequestBody, ResponseBody> = async (
 };
 
 export default handler;
+
+// P0（必须添加）：
+
+// 完善的输入验证（长度、格式）
+// 细致的错误处理和分类
+// 超时处理
+
+// P1（强烈建议）：
+
+// 请求元数据和日志
+// 速率限制
+// 请求ID追踪
+
+// P2（可选）：
+
+// 重试机制
+// 性能监控

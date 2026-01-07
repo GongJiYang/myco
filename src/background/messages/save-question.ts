@@ -4,6 +4,7 @@
  */
 
 import type { PlasmoMessaging } from "@plasmohq/messaging";
+import type { Question } from "~utils/storage";
 
 import { saveQuestion } from "~utils/storage";
 
@@ -16,7 +17,7 @@ export type ResponseBody = {
   error?: string;
 };
 
-const handler: PlasmoMessageHandler<RequestBody, ResponseBody> = async (
+const handler: PlasmoMessaging.MessageHandler<RequestBody, ResponseBody> = async (
   req,
   res
 ) => {
@@ -31,10 +32,17 @@ const handler: PlasmoMessageHandler<RequestBody, ResponseBody> = async (
     }
 
     // 验证问题数据
-    if (!question.content || question.content.trim().length === 0) {
+    if (!question.question || question.question.trim().length === 0) {
       return res.send({
         success: false,
-        error: "Question content is required"
+        error: "Question text is required"
+      });
+    }
+
+    if (!question.answer || question.answer.trim().length === 0) {
+      return res.send({
+        success: false,
+        error: "Answer is required"
       });
     }
 
